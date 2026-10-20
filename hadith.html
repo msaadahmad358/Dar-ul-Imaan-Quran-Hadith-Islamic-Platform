@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hadith Library - A-Imaan Islamic</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <div class="app-body">
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <h3 id="sidebarTitle" style="padding: 15px; font-family: var(--font-english); text-transform: uppercase; color: var(--primary);">Collections</h3>
+            <div class="sidebar-header">
+                <div class="search-wrapper">
+                    <svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5C16 11.11 15.41 12.59 14.44 13.73L14.71 14H15.5L20.5 19L19 20.5L14 15.5V14.71L13.73 14.44C12.59 15.41 11.11 16 9.5 16A6.5 6.5 0 0 1 3 9.5A6.5 6.5 0 0 1 9.5 3M9.5 5C7 5 5 7 5 9.5A4.5 4.5 0 0 0 9.5 14A4.5 4.5 0 0 0 14 9.5A4.5 4.5 0 0 0 9.5 5Z"/></svg>
+                    <input type="text" id="sidebarFilterInput" placeholder="Filter sidebar..." oninput="UI.filterSidebar()">
+                </div>
+            </div>
+            <div id="sidebarLayerNav"></div>
+            <ul id="sidebarList"></ul>
+        </div>
+
+        <!-- Main Content -->
+        <div id="contentArea">
+            <div class="toolbar">
+                <!-- Breadcrumbs -->
+                <div class="toolbar-group breadcrumb" id="hadithBreadcrumb">Collections</div>
+                
+                <!-- Settings -->
+                <div class="toolbar-group settings-dropdown">
+                    <button onclick="UI.toggleSettingsMenu(event)">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/></svg> Settings
+                    </button>
+                    <div class="settings-menu" id="settingsMenu">
+                        <div class="settings-row"><span>Arabic Text</span><label class="switch"><input type="checkbox" checked onchange="UI.toggleLang('ar')"><span class="slider"></span></label></div>
+                        <div class="settings-row"><span>English</span><label class="switch"><input type="checkbox" checked onchange="UI.toggleLang('en')"><span class="slider"></span></label></div>
+                        <div class="settings-row"><span>Urdu</span><label class="switch"><input type="checkbox" checked onchange="UI.toggleLang('ur')"><span class="slider"></span></label></div>
+                        <div class="settings-row" style="border-top: 1px solid #ccc; padding-top: 15px;"><span>Arabic Diacritics</span><label class="switch"><input type="checkbox" checked onchange="UI.toggleTashkeel()"><span class="slider"></span></label></div>
+                        <div class="settings-row" style="justify-content: flex-start; gap: 10px;"><button onclick="UI.changeFontSize(-0.1)">A-</button><button onclick="UI.changeFontSize(0.1)">A+</button></div>
+                    </div>
+                </div>
+
+                <!-- Global Search -->
+                <div class="toolbar-group">
+                    <div class="search-wrapper">
+                        <svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5C16 11.11 15.41 12.59 14.44 13.73L14.71 14H15.5L20.5 19L19 20.5L14 15.5V14.71L13.73 14.44C12.59 15.41 11.11 16 9.5 16A6.5 6.5 0 0 1 3 9.5A6.5 6.5 0 0 1 9.5 3M9.5 5C7 5 5 7 5 9.5A4.5 4.5 0 0 0 9.5 14A4.5 4.5 0 0 0 14 9.5A4.5 4.5 0 0 0 9.5 5Z"/></svg>
+                        <input type="text" id="globalSearchInput" placeholder="Search all Hadith..." style="width: 250px;">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hadith-viewer" id="hadithViewer"></div>
+        </div>
+    </div>
+
+    <script>
+        // =====================================================================
+        // 1. THE API LAYER
+        // =====================================================================
+        const SunnahAPI = {
+            db: {
+                collections: [
+                    { id: "sahihbukhari", name: "Sahih Bukhari", file: "sahihbukhari.json" },
+                    { id: "sahihmuslim", name: "Sahih Muslim", file: "sahihmuslimdata.json" },
+                    { id: "sunanabudawud", name: "Sunan Abu Dawud", file: "abudawooddata.json" },
+                    { id: "sunanaltirmidhi", name: "Jami at-Tirmidhi", file: "altirmidhidata.json" },
+                    { id: "sunanibnmajah", name: "Sunan Ibn Majah", file: "ibnemajahdata.json" },
+                    { id: "sunannasai", name: "Sunan an-Nasa'i", file: "sunannasaidata.json" }
+                ],
+                cache: {} 
+            },
+
+            getCollections: async function() {
+                return this.db.collections;
+            },
+
+            loadBookToCache: async function(collectionId) {
+                if (this.db.cache[collectionId]) return;
+                const book = this.db.collections.find(c => c.id === collectionId);
+                if (!book) throw new Error("Book not found");
+                const res = await fetch(`assets/hadith-books/${book.file}`);
+                const data = await res.json();
+                this.db.cache[collectionId] = Array.isArray(data) ? data : (data.hadiths || data.data || []);
+            },
+
+            loadAllBooksToCache: async function() {
+                const promises = this.db.collections.map(c => this.loadBookToCache(c.id));
+                await Promise.all(promises);
+            },
+
+            getChapters: async function(collectionId) {
+                await this.loadBookToCache(collectionId);
+                const hadiths = this.db.cache[collectionId];
+                const chaptersMap = new Map();
+                hadiths.forEach(h => { if (h.chapter && h.chapter.id) chaptersMap.set(h.chapter.id, h.chapter); });
+                return Array.from(chaptersMap.values());
+            },
+
+            getHadithsByChapter: async function(collectionId, chapterId, page = 1, limit = 15) {
+                const hadiths = this.db.cache[collectionId] || [];
+                const filtered = hadiths.filter(h => h.chapter && h.chapter.id === chapterId);
+                const start = (page - 1) * limit;
+                const end = start + limit;
+                return {
+                    data: filtered.slice(start, end),
+                    total: filtered.length,
+                    page: page,
+                    totalPages: Math.ceil(filtered.length / limit)
+                };
+            },
+
+            search: async function(query, collectionId = null, page = 1, limit = 15) {
+                let pool = [];
+                if (collectionId) {
+                    await this.loadBookToCache(collectionId);
+                    pool = this.db.cache[collectionId];
+                } else {
+                    if (Object.keys(this.db.cache).length === 0) await this.loadAllBooksToCache();
+                    Object.values(this.db.cache).forEach(arr => pool.push(...arr));
+                }
+
+                const terms = query.toLowerCase().split(/\s+/).filter(t => t);
+                const results = pool.filter(h => {
+                    const textToSearch = [
+                        h.hadithEnglish || '', h.hadithUrdu || '', h.hadithArabic || '',
+                        h.englishNarrator || '', h.urduNarrator || '',
+                        h.chapter?.chapterEnglish || '', h.chapter?.chapterUrdu || ''
+                    ].join(' ').toLowerCase();
+                    return terms.every(term => textToSearch.includes(term));
+                });
+
+                const start = (page - 1) * limit;
+                const end = start + limit;
+                return {
+                    data: results.slice(start, end),
+                    total: results.length,
+                    page: page,
+                    totalPages: Math.ceil(results.length / limit)
+                };
+            }
+        };
+
+        // =====================================================================
+        // 2. THE UI CONTROLLER
+        // =====================================================================
+        const UI = {
+            state: {
+                view: 'collections',
+                collection: null,
+                chapter: null,
+                page: 1,
+                searchQuery: '',
+                isTashkeelOn: true,
+                lang: { ar: true, en: true, ur: true }
+            },
+
+            els: {
+                sidebarList: document.getElementById('sidebarList'),
+                sidebarTitle: document.getElementById('sidebarTitle'),
+                sidebarLayerNav: document.getElementById('sidebarLayerNav'),
+                viewer: document.getElementById('hadithViewer'),
+                searchInput: document.getElementById('globalSearchInput'),
+                breadcrumb: document.getElementById('hadithBreadcrumb')
+            },
+
+            loadingHTML: `<div class="loading-state">Fetching from API...</div>`,
+            emptyStateSVG: `<svg viewBox="0 0 100 100"><path fill="none" stroke="currentColor" stroke-width="2" d="M50 5 L95 50 L50 95 L5 50 Z M50 15 L85 50 L50 85 L15 50 Z M50 25 L75 50 L50 75 L25 50 Z" /><circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" stroke-width="2"/></svg>`,
+
+            init: async function() {
+                this.state.collection = null;
+                this.state.chapter = null;
+                this.els.searchInput.value = '';
+                this.showLoading();
+                
+                const collections = await SunnahAPI.getCollections();
+                this.renderSidebarCollections(collections);
+                this.updateBreadcrumb();
+                
+                this.els.viewer.innerHTML = `<div class="empty-state">${this.emptyStateSVG}<h2>Hadith Library</h2><p>Select a collection from the sidebar to begin.</p></div>`;
+            },
+
+            showLoading: function() {
+                this.els.viewer.innerHTML = this.loadingHTML;
+            },
+
+            renderSidebarCollections: function(collections) {
+                this.state.view = 'collections';
+                this.els.sidebarTitle.textContent = 'Collections';
+                this.els.sidebarLayerNav.innerHTML = '';
+                this.els.sidebarList.innerHTML = '';
+                
+                collections.forEach(c => {
+                    const li = document.createElement('li');
+                    li.textContent = c.name;
+                    li.onclick = () => this.loadChapters(c);
+                    this.els.sidebarList.appendChild(li);
+                });
+            },
+
+            renderSidebarChapters: function(book, chapters) {
+                this.state.view = 'chapters';
+                this.els.sidebarTitle.textContent = book.name;
+                this.els.sidebarList.innerHTML = '';
+                
+                const backBtn = document.createElement('button'); 
+                backBtn.className = 'back-layer-btn'; 
+                backBtn.innerHTML = `&larr; Back to Collections`; 
+                backBtn.onclick = () => this.init(); 
+                this.els.sidebarLayerNav.innerHTML = ''; 
+                this.els.sidebarLayerNav.appendChild(backBtn);
+
+                chapters.forEach(chap => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<div>${chap.chapterNumber}. ${chap.chapterEnglish || chap.chapterUrdu}</div>`;
+                    if(this.state.chapter && this.state.chapter.id === chap.id) li.classList.add('active');
+                    li.onclick = () => this.loadHadiths(book, chap, li);
+                    this.els.sidebarList.appendChild(li);
+                });
+            },
+
+            loadChapters: async function(book) {
+                this.state.collection = book;
+                this.state.chapter = null;
+                this.showLoading();
+                this.updateBreadcrumb();
+                
+                try {
+                    const chapters = await SunnahAPI.getChapters(book.id);
+                    this.renderSidebarChapters(book, chapters);
+                    this.els.viewer.innerHTML = `<div class="empty-state">${this.emptyStateSVG}<h2>${book.name}</h2><p>Select a chapter from the sidebar.</p></div>`;
+                } catch (e) {
+                    this.els.viewer.innerHTML = `<div class="loading-state" style="color:red;">Error loading ${book.file}</div>`;
+                }
+            },
+
+            loadHadiths: async function(book, chapter, liElement) {
+                this.state.chapter = chapter;
+                this.state.page = 1;
+                this.state.searchQuery = '';
+                this.els.searchInput.value = '';
+                
+                Array.from(this.els.sidebarList.children).forEach(el => el.classList.remove('active'));
+                if (liElement) liElement.classList.add('active');
+
+                this.showLoading();
+                this.updateBreadcrumb();
+                
+                const response = await SunnahAPI.getHadithsByChapter(book.id, chapter.id, 1);
+                this.renderHadithsView(response.data, response.totalPages, response.page, book, chapter);
+            },
+
+            triggerSearch: async function() {
+                const query = this.els.searchInput.value.trim();
+                
+                if (query === '') {
+                    if (this.state.chapter) {
+                        this.loadHadiths(this.state.collection, this.state.chapter, null);
+                    } else if (this.state.collection) {
+                        this.loadChapters(this.state.collection);
+                    } else {
+                        this.init();
+                    }
+                    return;
+                }
+
+                const cleanQuery = query.replace(/[\[\]\{\}\(\)\-\"\'\*\.\,\?\!\:\;]/g, ' ').trim();
+                if (cleanQuery === '') return;
+
+                this.state.view = 'search';
+                this.state.searchQuery = cleanQuery;
+                this.state.page = 1;
+                this.showLoading();
+                this.updateBreadcrumb();
+
+                const response = await SunnahAPI.search(cleanQuery, this.state.collection ? this.state.collection.id : null, 1);
+                this.renderSearchView(response.data, response.totalPages, response.page, cleanQuery);
+            },
+
+            filterSidebar: function() {
+                const term = document.getElementById('sidebarFilterInput').value.toLowerCase();
+                const items = this.els.sidebarList.querySelectorAll('li');
+                items.forEach(li => {
+                    if (li.textContent.toLowerCase().includes(term)) li.style.display = 'flex';
+                    else li.style.display = 'none';
+                });
+            },
+
+            updateBreadcrumb: function() {
+                let html = `<span class="clickable" onclick="UI.init()">Collections</span>`;
+                
+                if (this.state.collection) {
+                    html += ` &rarr; <span class="clickable" onclick="UI.loadChapters(UI.state.collection)">${this.state.collection.name}</span>`;
+                }
+                if (this.state.chapter) {
+                    html += ` &rarr; <span class="active">${this.state.chapter.chapterEnglish || this.state.chapter.chapterUrdu}</span>`;
+                }
+                if (this.state.view === 'search') {
+                    html += ` &rarr; <span class="active">Search Results</span>`;
+                }
+                
+                this.els.breadcrumb.innerHTML = html;
+            },
+
+            renderHadithsView: function(data, totalPages, currentPage, book, chapter) {
+                this.els.viewer.innerHTML = '';
+                const container = document.createElement('div'); container.className = 'hadith-container';
+                
+                const infoCard = document.createElement('div');
+                infoCard.className = 'book-info-card';
+                const sampleHadith = data[0] || {};
+                infoCard.innerHTML = `
+                    <h1>${book.name}</h1>
+                    <h3>${chapter.chapterNumber}. ${chapter.chapterEnglish || chapter.chapterUrdu}</h3>
+                    ${sampleHadith.book?.writerName ? `<div class="writer">Author: ${sampleHadith.book.writerName} (d. ${sampleHadith.book.writerDeath || '?'} AH)</div>` : ''}
+                `;
+                container.appendChild(infoCard);
+
+                this.renderHadithCards(container, data, '');
+                this.renderPagination(container, totalPages, currentPage);
+                this.els.viewer.appendChild(container);
+            },
+
+            renderSearchView: function(data, totalPages, currentPage, query) {
+                this.els.viewer.innerHTML = '';
+                const container = document.createElement('div'); container.className = 'hadith-container';
+                
+                const header = document.createElement('div');
+                header.className = 'book-info-card';
+                header.innerHTML = `<h1>Search Results</h1><h3>Found ${data.length} matching results for "${query}"</h3>`;
+                container.appendChild(header);
+
+                this.renderHadithCards(container, data, query);
+                this.renderPagination(container, totalPages, currentPage);
+                this.els.viewer.appendChild(container);
+            },
+
+            renderHadithCards: function(container, data, searchQuery = '') {
+                const highlight = (text) => {
+                    if (!text || !searchQuery) return text || '';
+                    let res = text;
+                    const terms = searchQuery.split(/\s+/);
+                    terms.forEach(t => {
+                        if (t) res = res.replace(new RegExp(`(${t})`, 'gi'), '<mark>$1</mark>');
+                    });
+                    return res;
+                };
+
+                data.forEach(h => {
+                    const card = document.createElement('div'); card.className = 'hadith-card';
+                    let ar = (h.hadithArabic || '').replace(/۞/g, '').replace(/۩/g, '').replace(/﴿/g, '(').replace(/﴾/g, ')');
+                    
+                    card.innerHTML = `
+                        <div class="hadith-header">
+                            <span class="hadith-book-name">${h.book?.bookName || UI.state.collection?.name || 'Hadith'}</span>
+                            <span class="hadith-number">#${h.hadithNumber || '?'}</span>
+                            ${h.status ? `<span class="hadith-grade">${h.status}</span>` : ''}
+                        </div>
+                        <div class="hadith-body">
+                            ${(h.englishNarrator || h.urduNarrator) ? `<div class="hadith-narrator">Narrated by: ${highlight(h.englishNarrator || h.urduNarrator)}</div>` : ''}
+                            ${ar && this.state.lang.ar ? `<div class="hadith-arabic ${!this.state.isTashkeelOn ? 'no-tashkeel' : ''}">${highlight(ar)}</div>` : ''}
+                            ${h.hadithEnglish && this.state.lang.en ? `<div class="hadith-english">${highlight(h.hadithEnglish)}</div>` : ''}
+                            ${h.hadithUrdu && this.state.lang.ur ? `<div class="hadith-urdu">${highlight(h.hadithUrdu)}</div>` : ''}
+                        </div>`;
+                    container.appendChild(card);
+                });
+            },
+
+            renderPagination: function(container, totalPages, currentPage) {
+                if (totalPages <= 1) return;
+                const p = document.createElement('div'); p.className = 'pagination';
+                p.innerHTML = `
+                    <button onclick="UI.changePage(-1)" ${currentPage === 1 ? 'disabled' : ''}>&larr; Prev</button>
+                    <span>Page ${currentPage} of ${totalPages}</span>
+                    <button onclick="UI.changePage(1)" ${currentPage === totalPages ? 'disabled' : ''}>Next &rarr;</button>
+                `;
+                container.appendChild(p);
+            },
+
+            changePage: async function(delta) {
+                this.state.page += delta;
+                this.showLoading();
+                
+                if (this.state.view === 'search') {
+                    const res = await SunnahAPI.search(this.state.searchQuery, this.state.collection?.id, this.state.page);
+                    this.renderSearchView(res.data, res.totalPages, res.page, this.state.searchQuery);
+                } else if (this.state.view === 'hadiths') {
+                    const res = await SunnahAPI.getHadithsByChapter(this.state.collection.id, this.state.chapter.id, this.state.page);
+                    this.renderHadithsView(res.data, res.totalPages, res.page, this.state.collection, this.state.chapter);
+                }
+            },
+
+            toggleSettingsMenu: function(e) { 
+                e.stopPropagation(); 
+                document.getElementById('settingsMenu').classList.toggle('show'); 
+            },
+            
+            toggleLang: function(lang) { 
+                this.state.lang[lang] = !this.state.lang[lang]; 
+                document.querySelectorAll('.hadith-'+ (lang === 'ar' ? 'arabic' : lang === 'en' ? 'english' : 'urdu')).forEach(el => { 
+                    el.style.display = this.state.lang[lang] ? 'block' : 'none'; 
+                }); 
+            },
+
+            toggleTashkeel: function() { 
+                this.state.isTashkeelOn = !this.state.isTashkeelOn; 
+                document.querySelectorAll('.hadith-arabic').forEach(el => { 
+                    if(this.state.isTashkeelOn) el.classList.remove('no-tashkeel'); 
+                    else el.classList.add('no-tashkeel'); 
+                }); 
+            },
+
+            changeFontSize: function(delta) { 
+                const root = document.documentElement; 
+                let ar = parseFloat(getComputedStyle(root).getPropertyValue('--arabic-size'));
+                let ur = parseFloat(getComputedStyle(root).getPropertyValue('--urdu-size'));
+                let en = parseFloat(getComputedStyle(root).getPropertyValue('--eng-size')); 
+                root.style.setProperty('--arabic-size', `${Math.max(1.2, Math.min(3.5, ar + delta))}rem`); 
+                root.style.setProperty('--urdu-size', `${Math.max(1.0, Math.min(3.0, ur + delta))}rem`); 
+                root.style.setProperty('--eng-size', `${Math.max(0.8, Math.min(2.0, en + delta))}rem`); 
+            }
+        };
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.settings-dropdown button')) document.getElementById('settingsMenu').classList.remove('show');
+        }
+
+        let searchTimeout;
+        document.getElementById('globalSearchInput').addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => UI.triggerSearch(), 500);
+        });
+
+        UI.init();
+    </script>
+    <script src="load-navbar.js"></script>
+</body>
+</html>

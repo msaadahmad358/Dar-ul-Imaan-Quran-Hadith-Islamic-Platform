@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer Times - A-Imaan Islamic</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="navbar-container"></div>
+    
+    <div class="pt-container">
+        <div class="pt-dashboard">
+            
+            <div class="pt-search-bar">
+                <div class="search-wrapper">
+                    <svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5C16 11.11 15.41 12.59 14.44 13.73L14.71 14H15.5L20.5 19L19 20.5L14 15.5V14.71L13.73 14.44C12.59 15.41 11.11 16 9.5 16A6.5 6.5 0 0 1 3 9.5A6.5 6.5 0 0 1 9.5 3M9.5 5C7 5 5 7 5 9.5A4.5 4.5 0 0 0 9.5 14A4.5 4.5 0 0 0 14 9.5A4.5 4.5 0 0 0 9.5 5Z"/></svg>
+                    <input type="text" id="cityInput" placeholder="Enter City (e.g., London, UK)">
+                </div>
+                <button onclick="PrayerApp.searchByCity()">
+                    <svg class="icon" style="fill:white;" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5C16 11.11 15.41 12.59 14.44 13.73L14.71 14H15.5L20.5 19L19 20.5L14 15.5V14.71L13.73 14.44C12.59 15.41 11.11 16 9.5 16A6.5 6.5 0 0 1 3 9.5A6.5 6.5 0 0 1 9.5 3M9.5 5C7 5 5 7 5 9.5A4.5 4.5 0 0 0 9.5 14A4.5 4.5 0 0 0 14 9.5A4.5 4.5 0 0 0 9.5 5Z"/></svg> Search
+                </button>
+                <button onclick="PrayerApp.getLocation()" style="background-color: var(--bg-main); color: var(--primary);">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2M12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/></svg> Auto Detect
+                </button>
+            </div>
+
+            <div class="pt-header-card">
+                <h1 id="locationName">Detecting Location...</h1>
+                <div class="hijri-date" id="hijriDate"></div>
+                <div class="greg-date" id="gregDate"></div>
+                <div class="pt-countdown" id="countdown">Next Prayer: --</div>
+            </div>
+
+            <div class="pt-grid" id="prayerGrid"></div>
+
+            <div class="pt-panels">
+                <div class="pt-panel">
+                    <h3>Qibla Direction</h3>
+                    <div class="qibla-info">
+                        <div class="qibla-compass">
+                            <span class="north">N</span>
+                            <div class="arrow" id="qiblaArrow"></div>
+                        </div>
+                        <div class="qibla-info-text">
+                            <h4 id="qiblaDegrees">0°</h4>
+                            <p style="font-family: var(--font-english); font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">from True North</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-panel">
+                    <h3>Calculation Method</h3>
+                    <select class="pt-select" id="methodSelect" onchange="PrayerApp.changeMethod()">
+                        <option value="2">Islamic Society of North America (ISNA)</option>
+                        <option value="3">Muslim World League (MWL)</option>
+                        <option value="4">Umm Al-Qura University, Makkah</option>
+                        <option value="1">University of Islamic Sciences, Karachi</option>
+                        <option value="5">Egyptian General Authority of Survey</option>
+                        <option value="8">Gulf Region</option>
+                        <option value="12">Union Organization Islamic de France</option>
+                        <option value="13">Diyanet İşleri Başkanlığı, Turkey</option>
+                    </select>
+                    <p style="font-family: var(--font-english); font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+                        Changing the method will instantly recalculate the timings.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pt-panel" style="margin-top: 10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                    <h3>Monthly Prayer Timetable</h3>
+                    <button onclick="PrayerApp.loadMonthlyCalendar()" style="padding: 5px 15px; font-size: 12px;">Refresh Month</button>
+                </div>
+                <div class="pt-calendar-wrapper">
+                    <table class="pt-calendar-table" id="calendarTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Day</th>
+                                <th>Fajr</th>
+                                <th>Sunrise</th>
+                                <th>Dhuhr</th>
+                                <th>Asr</th>
+                                <th>Maghrib</th>
+                                <th>Isha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="calendarBody">
+                            <tr><td colspan="8" class="loading-state">Loading monthly calendar...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const PrayerApp = {
+            state: {
+                lat: null,
+                lng: null,
+                cityName: "Makkah, Saudi Arabia",
+                method: 4,
+                timings: null,
+                hijriDate: null,
+                interval: null
+            },
+
+            API_BASE: "https://api.aladhan.com/v1",
+
+            init: function() {
+                this.state.method = parseInt(document.getElementById('methodSelect').value);
+                this.getLocation();
+            },
+
+            searchByCity: function() {
+                const cityInput = document.getElementById('cityInput').value.trim();
+                if (!cityInput) return alert("Please enter a city name.");
+
+                this.state.lat = null;
+                this.state.lng = null;
+                this.state.cityName = cityInput;
+                
+                this.fetchDailyTimings();
+                this.loadMonthlyCalendar();
+            },
+
+            getLocation: function() {
+                if (!navigator.geolocation) {
+                    alert("Geolocation is not supported by your browser. Loading default location (Makkah).");
+                    this.fallbackToMakkah();
+                    return;
+                }
+                
+                document.getElementById('locationName').textContent = "Requesting Permission...";
+                
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        this.state.lat = pos.coords.latitude;
+                        this.state.lng = pos.coords.longitude;
+                        this.state.cityName = null;
+                        
+                        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${this.state.lat}&lon=${this.state.lng}&format=json`)
+                            .then(r => r.json())
+                            .then(data => {
+                                const address = data.address;
+                                const city = address.city || address.town || address.village || address.state || "Your Location";
+                                const country = address.country || "";
+                                this.state.cityName = country ? `${city}, ${country}` : city;
+                                this.fetchDailyTimings();
+                                this.loadMonthlyCalendar();
+                            })
+                            .catch(() => {
+                                this.state.cityName = "Your Location";
+                                this.fetchDailyTimings();
+                                this.loadMonthlyCalendar();
+                            });
+                    },
+                    (err) => {
+                        console.warn("Location denied or failed.", err);
+                        alert("Location access denied. Defaulting to Makkah. You can search manually above.");
+                        this.fallbackToMakkah();
+                    },
+                    { timeout: 10000 }
+                );
+            },
+
+            fallbackToMakkah: function() {
+                this.state.lat = 21.4225;
+                this.state.lng = 39.8262;
+                this.state.cityName = "Makkah, Saudi Arabia";
+                this.fetchDailyTimings();
+                this.loadMonthlyCalendar();
+            },
+
+            changeMethod: function() {
+                this.state.method = parseInt(document.getElementById('methodSelect').value);
+                this.fetchDailyTimings();
+                this.loadMonthlyCalendar();
+            },
+
+            fetchDailyTimings: async function() {
+                try {
+                    let url = `${this.API_BASE}/timings`;
+                    
+                    if (this.state.lat && this.state.lng) {
+                        url += `?latitude=${this.state.lat}&longitude=${this.state.lng}&method=${this.state.method}`;
+                    } else {
+                        const parts = this.state.cityName.split(',');
+                        const city = parts[0].trim();
+                        const country = parts.length > 1 ? parts[1].trim() : '';
+                        url += `?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=${this.state.method}`;
+                    }
+
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    
+                    if (data.code !== 200) throw new Error(data.data);
+
+                    this.state.timings = data.data.timings;
+                    this.state.hijriDate = data.data.date.hijri;
+                    
+                    this.renderDashboard(data.data);
+
+                } catch (error) {
+                    console.error(error);
+                    alert("Error fetching prayer times. Please check the spelling or try a different city.");
+                }
+            },
+
+            loadMonthlyCalendar: async function() {
+                try {
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = now.getMonth() + 1;
+                    
+                    let url = `${this.API_BASE}/calendar/${year}/${month}`;
+                    
+                    if (this.state.lat && this.state.lng) {
+                        url += `?latitude=${this.state.lat}&longitude=${this.state.lng}&method=${this.state.method}`;
+                    } else {
+                        const parts = this.state.cityName.split(',');
+                        const city = parts[0].trim();
+                        const country = parts.length > 1 ? parts[1].trim() : '';
+                        url = `${this.API_BASE}/calendarByCity/${year}/${month}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=${this.state.method}`;
+                    }
+
+                    document.getElementById('calendarBody').innerHTML = `<tr><td colspan="8" class="loading-state">Loading calendar...</td></tr>`;
+
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    
+                    if (data.code !== 200) throw new Error("Calendar fetch failed");
+                    this.renderCalendar(data.data);
+
+                } catch (error) {
+                    document.getElementById('calendarBody').innerHTML = `<tr><td colspan="8" class="loading-state" style="color:red;">Error loading calendar.</td></tr>`;
+                }
+            },
+
+            renderDashboard: function(data) {
+                document.getElementById('locationName').textContent = this.state.cityName || "Your Location";
+                document.getElementById('hijriDate').textContent = `${data.date.hijri.day} ${data.date.hijri.month.en} ${data.date.hijri.year} AH`;
+                document.getElementById('gregDate').textContent = data.date.readable;
+
+                const qiblaAngle = this.calculateQibla(this.state.lat || 21.4225, this.state.lng || 39.8262);
+                document.getElementById('qiblaDegrees').textContent = `${qiblaAngle.toFixed(1)}°`;
+                document.getElementById('qiblaArrow').style.transform = `rotate(${qiblaAngle}deg)`;
+
+                const prayers = [
+                    { name: 'Fajr', key: 'Fajr' },
+                    { name: 'Sunrise', key: 'Sunrise' },
+                    { name: 'Dhuhr', key: 'Dhuhr' },
+                    { name: 'Asr', key: 'Asr' },
+                    { name: 'Maghrib', key: 'Maghrib' },
+                    { name: 'Isha', key: 'Isha' }
+                ];
+
+                const grid = document.getElementById('prayerGrid');
+                grid.innerHTML = '';
+
+                prayers.forEach(p => {
+                    const time = data.timings[p.key];
+                    const card = document.createElement('div');
+                    card.className = 'pt-card';
+                    card.id = `card-${p.key}`;
+                    const cleanTime = time.split(' ')[0];
+                    card.innerHTML = `
+                        <div class="name">${p.name}</div>
+                        <div class="time">${cleanTime}</div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                this.startCountdown();
+            },
+
+            renderCalendar: function(calendarData) {
+                const tbody = document.getElementById('calendarBody');
+                tbody.innerHTML = '';
+                const today = new Date().getDate();
+
+                calendarData.forEach(day => {
+                    const tr = document.createElement('tr');
+                    const d = new Date(day.date.gregorian.date.split('-').reverse().join('-'));
+                    const dayNum = d.getDate();
+                    if (dayNum === today) tr.classList.add('today');
+
+                    tr.innerHTML = `
+                        <td>${day.date.gregorian.date}</td>
+                        <td>${day.date.gregorian.weekday.en}</td>
+                        <td>${day.timings.Fajr.split(' ')[0]}</td>
+                        <td>${day.timings.Sunrise.split(' ')[0]}</td>
+                        <td>${day.timings.Dhuhr.split(' ')[0]}</td>
+                        <td>${day.timings.Asr.split(' ')[0]}</td>
+                        <td>${day.timings.Maghrib.split(' ')[0]}</td>
+                        <td>${day.timings.Isha.split(' ')[0]}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            },
+
+            startCountdown: function() {
+                if (this.state.interval) clearInterval(this.state.interval);
+
+                this.state.interval = setInterval(() => {
+                    const now = new Date();
+                    const t = this.state.timings;
+                    if (!t) return;
+
+                    const times = [
+                        { name: 'Fajr', time: this.parseTime(t.Fajr) },
+                        { name: 'Dhuhr', time: this.parseTime(t.Dhuhr) },
+                        { name: 'Asr', time: this.parseTime(t.Asr) },
+                        { name: 'Maghrib', time: this.parseTime(t.Maghrib) },
+                        { name: 'Isha', time: this.parseTime(t.Isha) }
+                    ];
+
+                    let nextPrayer = null;
+                    for (let i = 0; i < times.length; i++) {
+                        if (times[i].time > now) {
+                            nextPrayer = times[i];
+                            break;
+                        }
+                    }
+
+                    if (!nextPrayer) {
+                        nextPrayer = { name: 'Fajr (Tomorrow)', time: new Date(times[0].time.getTime() + 24 * 60 * 60 * 1000) };
+                    }
+
+                    const diff = nextPrayer.time - now;
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    const countdownEl = document.getElementById('countdown');
+                    countdownEl.innerHTML = `Next: ${nextPrayer.name} in <span style="font-size:1.4rem;">${hours}h ${minutes}m ${seconds}s</span>`;
+
+                    document.querySelectorAll('.pt-card').forEach(c => c.classList.remove('active-prayer'));
+                    const nextCard = document.getElementById(`card-${nextPrayer.name.split(' ')[0]}`);
+                    if (nextCard) nextCard.classList.add('active-prayer');
+
+                }, 1000);
+            },
+
+            parseTime: function(timeStr) {
+                const clean = timeStr.split(' ')[0];
+                const [hours, minutes] = clean.split(':').map(Number);
+                const d = new Date();
+                d.setHours(hours, minutes, 0, 0);
+                return d;
+            },
+
+            calculateQibla: function(lat, lng) {
+                const makkahLat = 21.4225 * Math.PI / 180;
+                const makkahLng = 39.8262 * Math.PI / 180;
+                const userLat = lat * Math.PI / 180;
+                const userLng = lng * Math.PI / 180;
+
+                const dLng = makkahLng - userLng;
+                const y = Math.sin(dLng);
+                const x = Math.cos(userLat) * Math.tan(makkahLat) - Math.sin(userLat) * Math.cos(dLng);
+
+                let qibla = Math.atan2(y, x) * 180 / Math.PI;
+                return (qibla + 360) % 360;
+            }
+        };
+
+        PrayerApp.init();
+    </script>
+    <script src="load-navbar.js"></script>
+</body>
+</html>

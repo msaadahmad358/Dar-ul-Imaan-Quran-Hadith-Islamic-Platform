@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Imaan Islamic</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    
+    <!-- Navbar Placeholder -->
+    <div id="navbar-container"></div>
+
+    <!-- Main Dashboard Content -->
+    <div class="home-dashboard">
+        
+        <!-- Hero Section -->
+        <div class="hero-split">
+            <div class="hero-left">
+                <img src="assets/logo.png" alt="Dar ul Imaan" class="hero-logo">
+                <h1>Dar-ul-Imaan</h1>
+            </div>
+            
+            <div class="hero-right">
+                <div class="prayer-widget">
+                    <div class="widget-location" id="prayerLocation">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2M12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/></svg>
+                        Detecting...
+                    </div>
+                    <h3>Next Prayer</h3>
+                    <div class="next-prayer-name" id="nextPrayerName">Loading...</div>
+                    <div class="next-prayer-time" id="nextPrayerTime">---</div>
+                    <div class="countdown-timer" id="prayerCountdown">--:--:--</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Modules Grid -->
+        <div class="modules-grid">
+            <a href="quran.html" class="module-card">
+                <div class="module-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 3L1 9L4 10.5V16L12 20L20 16V10.5L23 9L12 3M12 5.5L18.5 9L12 12.5L5.5 9L12 5.5M6 12.5V15.5L12 18.5L18 15.5V12.5L12 15.5L6 12.5Z"/></svg>
+                </div>
+                <h2>Read Quran</h2>
+                <p>Read the Holy Quran page by page.</p>
+            </a>
+            
+            <a href="listenQuran.html" class="module-card">
+                <div class="module-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12A10 10 0 0 0 12 22A10 10 0 0 0 22 12A10 10 0 0 0 12 2M12 4A8 8 0 0 1 20 12A8 8 0 0 1 12 20A8 8 0 0 1 4 12A8 8 0 0 1 12 4M12 6A2 2 0 0 0 10 8V16A2 2 0 0 0 12 18A2 2 0 0 0 14 16V8A2 2 0 0 0 12 6Z"/></svg>
+                </div>
+                <h2>Listen Quran</h2>
+                <p>Recitations by world-renowned Qaris.</p>
+            </a>
+            
+            <a href="hadith.html" class="module-card">
+                <div class="module-icon">
+                    <svg viewBox="0 0 24 24"><path d="M19 2H8C6.9 2 6 2.9 6 4V16C6 17.1 6.9 18 8 18H19C20.1 18 21 17.1 21 16V4C21 2.9 20.1 2 19 2M19 16H8V4H19V16M6 20H19V22H6C4.9 22 4 21.1 4 20V6H6V20Z"/></svg>
+                </div>
+                <h2>Hadith</h2>
+                <p>Authentic narrations and search.</p>
+            </a>
+            
+            <a href="names.html" class="module-card">
+                <div class="module-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z"/></svg>
+                </div>
+                <h2>99 Names</h2>
+                <p>Learn with meanings & translations.</p>
+            </a>
+
+            <a href="prayertimes.html" class="module-card">
+                <div class="module-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12H4C4 7.6 7.6 4 12 4C16.4 4 20 7.6 20 12C20 16.4 16.4 20 12 20V22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2M12 6C8.7 6 6 8.7 6 12C6 15.3 8.7 18 12 18C15.3 18 18 15.3 18 12C18 8.7 15.3 6 12 6M12 8C14.2 8 16 9.8 16 12C16 14.2 14.2 16 12 16C9.8 16 8 14.2 8 12C8 9.8 9.8 8 12 8M12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10Z"/></svg>
+                </div>
+                <h2>Prayer Times</h2>
+                <p>Worldwide times & Qibla direction.</p>
+            </a>
+        </div> 
+    </div>
+
+    <!-- Scripts -->
+    <script src="load-navbar.js"></script>
+    <script>
+        const API_BASE = "https://api.aladhan.com/v1/timings";
+        let prayerTimings = null;
+
+        async function initPrayerWidget() {
+            const locationEl = document.getElementById('prayerLocation');
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (pos) => {
+                        const lat = pos.coords.latitude;
+                        const lng = pos.coords.longitude;
+                        
+                        try {
+                            const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+                            const geoData = await geoRes.json();
+                            const city = geoData.address.city || geoData.address.town || geoData.address.village || "Your Location";
+                            const country = geoData.address.country_code ? geoData.address.country_code.toUpperCase() : "";
+                            locationEl.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2M12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/></svg> ${country ? city + ', ' + country : city}`;
+                        } catch (e) {
+                            locationEl.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2M12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/></svg> Your Location`;
+                        }
+                        
+                        fetchTimings(lat, lng);
+                    },
+                    (err) => {
+                        locationEl.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2M12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/></svg> Makkah, SA`;
+                        fetchTimings(21.4225, 39.8262);
+                    },
+                    { timeout: 5000 }
+                );
+            } else {
+                locationEl.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2M12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/></svg> Makkah, SA`;
+                fetchTimings(21.4225, 39.8262);
+            }
+        }
+
+        async function fetchTimings(lat, lng) {
+            try {
+                const today = new Date();
+                const dateStr = `${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}`;
+                const res = await fetch(`${API_BASE}/${dateStr}?latitude=${lat}&longitude=${lng}&method=4`);
+                const data = await res.json();
+                prayerTimings = data.data.timings;
+                startCountdown();
+            } catch (error) {
+                console.error("Failed to load prayer times", error);
+                document.getElementById('nextPrayerName').textContent = "Error";
+            }
+        }
+
+        function parseTime(timeStr) {
+            const clean = timeStr.split(' ')[0];
+            const [hours, minutes] = clean.split(':').map(Number);
+            const d = new Date();
+            d.setHours(hours, minutes, 0, 0);
+            return d;
+        }
+
+        function startCountdown() {
+            const now = new Date();
+            const t = prayerTimings;
+
+            const times = [
+                { name: 'Fajr', time: parseTime(t.Fajr) },
+                { name: 'Dhuhr', time: parseTime(t.Dhuhr) },
+                { name: 'Asr', time: parseTime(t.Asr) },
+                { name: 'Maghrib', time: parseTime(t.Maghrib) },
+                { name: 'Isha', time: parseTime(t.Isha) }
+            ];
+
+            let nextPrayer = null;
+            for (let i = 0; i < times.length; i++) {
+                if (times[i].time > now) {
+                    nextPrayer = times[i];
+                    break;
+                }
+            }
+
+            if (!nextPrayer) {
+                nextPrayer = { name: 'Fajr (Tomorrow)', time: new Date(times[0].time.getTime() + 24 * 60 * 60 * 1000) };
+            }
+
+            const diff = nextPrayer.time - now;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const pad = (num) => num.toString().padStart(2, '0');
+            
+            document.getElementById('nextPrayerName').textContent = nextPrayer.name;
+            document.getElementById('nextPrayerTime').textContent = nextPrayer.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('prayerCountdown').textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+
+            setTimeout(startCountdown, 1000);
+        }
+
+        initPrayerWidget();
+    </script>
+</body>
+</html>

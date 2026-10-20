@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Quran - A-Imaan Islamic</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="navbar-container"></div>
+    
+    <div class="app-body">
+        <div id="sidebar">
+            <div class="sidebar-header">
+                <div class="search-wrapper">
+                    <svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5C16 11.11 15.41 12.59 14.44 13.73L14.71 14H15.5L20.5 19L19 20.5L14 15.5V14.71L13.73 14.44C12.59 15.41 11.11 16 9.5 16A6.5 6.5 0 0 1 3 9.5A6.5 6.5 0 0 1 9.5 3M9.5 5C7 5 5 7 5 9.5A4.5 4.5 0 0 0 9.5 14A4.5 4.5 0 0 0 14 9.5A4.5 4.5 0 0 0 9.5 5Z"/></svg>
+                    <input type="text" id="sidebarFilterInput" placeholder="Search Surah..." oninput="filterSidebar()">
+                </div>
+            </div>
+            <ul id="sidebarList"></ul>
+        </div>
+
+        <div id="contentArea">
+            <div class="toolbar">
+                <div class="toolbar-group">
+                    <span id="readPageInfo" style="font-family:var(--font-english); font-weight:bold;">Page 1 of 604</span>
+                </div>
+                <div class="toolbar-group">
+                    <button id="prevPageBtn" onclick="changePage(-1)">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M15.41 16.58L10.83 12L15.41 7.41L14 6L8 12L14 18L15.41 16.58Z"/></svg> Prev
+                    </button>
+                    <input type="number" id="pageInput" min="1" max="604" value="1" onchange="jumpToPage()" style="width:70px; text-align:center;">
+                    <button id="nextPageBtn" onclick="changePage(1)">
+                        Next <svg class="icon" style="margin-left:4px; margin-right:0;" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12L8.59 7.41L10 6L16 12L10 18L8.59 16.58Z"/></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="image-viewer" id="imageViewer">
+                <div class="image-container" id="imageContainer">
+                    <img id="quranImage" src="" alt="Quran Page">
+                </div>
+                
+                <div id="imageFallback" class="empty-state" style="display:none;">
+                    <svg viewBox="0 0 100 100"><path fill="none" stroke="currentColor" stroke-width="2" d="M50 5 L95 50 L50 95 L5 50 Z M50 15 L85 50 L50 85 L15 50 Z M50 25 L75 50 L50 75 L25 50 Z" /><circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    <h2>Page Not Found</h2>
+                    <p>Image file is missing from the assets folder.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const TOTAL_PAGES = 604;
+        const IMAGE_FOLDER = "assets/quran-images/";
+        
+        const surahData = [
+            { id: 1, name: "Al-Fatihah", page: 1 }, { id: 2, name: "Al-Baqarah", page: 2 }, { id: 3, name: "Ali 'Imran", page: 50 },
+            { id: 4, name: "An-Nisa", page: 77 }, { id: 5, name: "Al-Ma'idah", page: 106 }, { id: 6, name: "Al-An'am", page: 128 },
+            { id: 7, name: "Al-A'raf", page: 151 }, { id: 8, name: "Al-Anfal", page: 177 }, { id: 9, name: "At-Tawbah", page: 187 },
+            { id: 10, name: "Yunus", page: 208 }, { id: 11, name: "Hud", page: 221 }, { id: 12, name: "Yusuf", page: 235 },
+            { id: 13, name: "Ar-Ra'd", page: 249 }, { id: 14, name: "Ibrahim", page: 255 }, { id: 15, name: "Al-Hijr", page: 262 },
+            { id: 16, name: "An-Nahl", page: 267 }, { id: 17, name: "Al-Isra", page: 282 }, { id: 18, name: "Al-Kahf", page: 293 },
+            { id: 19, name: "Maryam", page: 305 }, { id: 20, name: "Taha", page: 312 }, { id: 21, name: "Al-Anbya", page: 322 },
+            { id: 22, name: "Al-Hajj", page: 332 }, { id: 23, name: "Al-Mu'minun", page: 342 }, { id: 24, name: "An-Nur", page: 350 },
+            { id: 25, name: "Al-Furqan", page: 359 }, { id: 26, name: "Ash-Shu'ara", page: 367 }, { id: 27, name: "An-Naml", page: 377 },
+            { id: 28, name: "Al-Qasas", page: 385 }, { id: 29, name: "Al-'Ankabut", page: 396 }, { id: 30, name: "Ar-Rum", page: 404 },
+            { id: 31, name: "Luqman", page: 411 }, { id: 32, name: "As-Sajdah", page: 415 }, { id: 33, name: "Al-Ahzab", page: 418 },
+            { id: 34, name: "Saba", page: 428 }, { id: 35, name: "Fatir", page: 434 }, { id: 36, name: "Ya-Sin", page: 440 },
+            { id: 37, name: "As-Saffat", page: 446 }, { id: 38, name: "Sad", page: 453 }, { id: 39, name: "Az-Zumar", page: 458 },
+            { id: 40, name: "Ghafir", page: 467 }, { id: 41, name: "Fussilat", page: 477 }, { id: 42, name: "Ash-Shuraa", page: 483 },
+            { id: 43, name: "Az-Zukhruf", page: 489 }, { id: 44, name: "Ad-Dukhan", page: 496 }, { id: 45, name: "Al-Jathiyah", page: 499 },
+            { id: 46, name: "Al-Ahqaf", page: 502 }, { id: 47, name: "Muhammad", page: 507 }, { id: 48, name: "Al-Fath", page: 511 },
+            { id: 49, name: "Al-Hujurat", page: 515 }, { id: 50, name: "Qaf", page: 518 }, { id: 51, name: "Adh-Dhariyat", page: 520 },
+            { id: 52, name: "At-Tur", page: 523 }, { id: 53, name: "An-Najm", page: 526 }, { id: 54, name: "Al-Qamar", page: 528 },
+            { id: 55, name: "Ar-Rahman", page: 531 }, { id: 56, name: "Al-Waqi'ah", page: 534 }, { id: 57, name: "Al-Hadid", page: 537 },
+            { id: 58, name: "Al-Mujadila", page: 542 }, { id: 59, name: "Al-Hashr", page: 545 }, { id: 60, name: "Al-Mumtahanah", page: 549 },
+            { id: 61, name: "As-Saf", page: 551 }, { id: 62, name: "Al-Jumu'ah", page: 553 }, { id: 63, name: "Al-Munafiqun", page: 554 },
+            { id: 64, name: "At-Taghabun", page: 556 }, { id: 65, name: "At-Talaq", page: 558 }, { id: 66, name: "At-Tahrim", page: 560 },
+            { id: 67, name: "Al-Mulk", page: 562 }, { id: 68, name: "Al-Qalam", page: 564 }, { id: 69, name: "Al-Haqqah", page: 566 },
+            { id: 70, name: "Al-Ma'arij", page: 568 }, { id: 71, name: "Nuh", page: 570 }, { id: 72, name: "Al-Jinn", page: 572 },
+            { id: 73, name: "Al-Muzzammil", page: 574 }, { id: 74, name: "Al-Muddaththir", page: 575 }, { id: 75, name: "Al-Qiyamah", page: 577 },
+            { id: 76, name: "Al-Insan", page: 578 }, { id: 77, name: "Al-Mursalat", page: 580 }, { id: 78, name: "An-Naba", page: 582 },
+            { id: 79, name: "An-Nazi'at", page: 583 }, { id: 80, name: "Abasa", page: 585 }, { id: 81, name: "At-Takwir", page: 586 },
+            { id: 82, name: "Al-Infitar", page: 587 }, { id: 83, name: "Al-Mutaffifin", page: 587 }, { id: 84, name: "Al-Inshiqaq", page: 589 },
+            { id: 85, name: "Al-Buruj", page: 590 }, { id: 86, name: "At-Tariq", page: 591 }, { id: 87, name: "Al-A'la", page: 591 },
+            { id: 88, name: "Al-Ghashiyah", page: 592 }, { id: 89, name: "Al-Fajr", page: 593 }, { id: 90, name: "Al-Balad", page: 594 },
+            { id: 91, name: "Ash-Shams", page: 595 }, { id: 92, name: "Al-Layl", page: 595 }, { id: 93, name: "Ad-Duhaa", page: 596 },
+            { id: 94, name: "Ash-Sharh", page: 596 }, { id: 95, name: "At-Tin", page: 597 }, { id: 96, name: "Al-'Alaq", page: 597 },
+            { id: 97, name: "Al-Qadr", page: 598 }, { id: 98, name: "Al-Bayyinah", page: 598 }, { id: 99, name: "Az-Zalzalah", page: 599 },
+            { id: 100, name: "Al-'Adiyat", page: 599 }, { id: 101, name: "Al-Qari'ah", page: 600 }, { id: 102, name: "At-Takathur", page: 600 },
+            { id: 103, name: "Al-'Asr", page: 601 }, { id: 104, name: "Al-Humazah", page: 601 }, { id: 105, name: "Al-Fil", page: 601 },
+            { id: 106, name: "Quraysh", page: 602 }, { id: 107, name: "Al-Ma'un", page: 602 }, { id: 108, name: "Al-Kawthar", page: 602 },
+            { id: 109, name: "Al-Kafirun", page: 603 }, { id: 110, name: "An-Nasr", page: 603 }, { id: 111, name: "Al-Masad", page: 603 },
+            { id: 112, name: "Al-Ikhlas", page: 604 }, { id: 113, name: "Al-Falaq", page: 604 }, { id: 114, name: "An-Nas", page: 604 }
+        ];
+
+        let currentPage = 1;
+        const sidebarListEl = document.getElementById('sidebarList');
+        const pageInput = document.getElementById('pageInput');
+        const quranImage = document.getElementById('quranImage');
+        const pageInfo = document.getElementById('readPageInfo');
+        const imageContainer = document.getElementById('imageContainer');
+        const imageFallback = document.getElementById('imageFallback');
+
+        quranImage.onload = () => {
+            imageContainer.style.display = 'block';
+            imageFallback.style.display = 'none';
+        };
+        quranImage.onerror = () => {
+            imageContainer.style.display = 'none';
+            imageFallback.style.display = 'flex';
+        };
+
+        function init() {
+            renderSidebar();
+            updateView();
+            setupKeyboardNav();
+        }
+
+        function renderSidebar(data = surahData) {
+            sidebarListEl.innerHTML = '';
+            let activeElement = null;
+
+            data.forEach(surah => {
+                const li = document.createElement('li');
+                if (surah.page === currentPage) {
+                    li.classList.add('active');
+                    activeElement = li;
+                }
+                li.innerHTML = `<span>${surah.id}. ${surah.name}</span><span class="item-meta">Page ${surah.page}</span>`;
+                li.onclick = () => {
+                    currentPage = surah.page;
+                    updateView();
+                    renderSidebar(); 
+                };
+                sidebarListEl.appendChild(li);
+            });
+
+            if (activeElement) {
+                activeElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }
+
+        function updateView() {
+            const paddedPage = currentPage.toString().padStart(3, '0');
+            quranImage.src = `${IMAGE_FOLDER}page${paddedPage}.png`;
+            
+            pageInfo.textContent = `Page ${currentPage} of ${TOTAL_PAGES}`;
+            pageInput.value = currentPage;
+            
+            document.getElementById('prevPageBtn').disabled = currentPage <= 1;
+            document.getElementById('nextPageBtn').disabled = currentPage >= TOTAL_PAGES;
+        }
+
+        function changePage(delta) {
+            const newPage = currentPage + delta;
+            if (newPage >= 1 && newPage <= TOTAL_PAGES) {
+                currentPage = newPage;
+                updateView();
+                renderSidebar();
+            }
+        }
+
+        function jumpToPage() {
+            let val = parseInt(pageInput.value);
+            if (isNaN(val)) val = 1;
+            if (val < 1) val = 1;
+            if (val > TOTAL_PAGES) val = TOTAL_PAGES;
+            currentPage = val;
+            updateView();
+            renderSidebar();
+        }
+
+        function filterSidebar() {
+            const term = document.getElementById('sidebarFilterInput').value.toLowerCase();
+            const filtered = surahData.filter(s => s.name.toLowerCase().includes(term) || s.id.toString().includes(term));
+            renderSidebar(filtered);
+        }
+
+        function setupKeyboardNav() {
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT') return;
+                if (e.key === 'ArrowRight') changePage(1);
+                else if (e.key === 'ArrowLeft') changePage(-1);
+            });
+        }
+
+        init();
+    </script>
+    <script src="load-navbar.js"></script>
+</body>
+</html>

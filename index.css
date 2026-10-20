@@ -1,0 +1,368 @@
+/* ==========================================================================
+   1. FONTS & VARIABLES (Premium Yaqoot/Ruby Theme)
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
+@font-face {
+    font-family: 'KFGQPC Uthmanic';
+    src: url('assets/fonts/KFGQPC Uthmanic Script HAFS Regular.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Jameel Noori';
+    src: url('assets/fonts/Jameel Noori Nastaleeq Regular.ttf') format('truetype');
+}
+
+:root {
+    /* Premium Ruby Palette */
+    --primary: #B30018;
+    --primary-light: #E60026;
+    --primary-dark: #660011;
+    --primary-bg: #FCF5F5;
+    
+    /* Neutrals */
+    --bg-main: #ffffff;
+    --bg-sidebar: #FAFAFA;
+    --bg-toolbar: #F8F8F8;
+    --bg-home: #FDFDFD;
+    
+    /* Text */
+    --text-main: #1A1A1A;
+    --text-muted: #666666;
+    --text-light: #FFFFFF;
+    
+    /* Borders & UI */
+    --border-color: #EBE0E0;
+    --border-heavy: #B30018;
+    --hover-bg: #F5E6E6;         
+    --active-bg: #EBD4D6;        
+    
+    /* Typography */
+    --font-arabic: 'KFGQPC Uthmanic', 'Amiri', serif;
+    --font-urdu: 'Jameel Noori', 'Noto Nastaliq Urdu', serif;
+    --font-ui: 'Georgia', 'Times New Roman', serif;
+    --font-english: 'Segoe UI', Tahoma, sans-serif;
+    
+    /* Scaling */
+    --arabic-size: 1.8rem;
+    --urdu-size: 1.4rem;
+    --eng-size: 1.1rem;
+}
+
+/* ==========================================================================
+   2. GLOBAL RESETS & UTILITIES
+   ========================================================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
+    background-color: var(--bg-main); 
+    color: var(--text-main); 
+    height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    font-family: var(--font-ui); 
+    overflow: hidden; 
+}
+
+mark { background-color: #ffeb3b; color: #000; padding: 0 2px; border-radius: 2px; }
+.loading-state { text-align: center; padding: 50px; color: var(--text-muted); font-family: var(--font-english); }
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-sidebar); }
+::-webkit-scrollbar-thumb { background: var(--border-heavy); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+/* SVG Icons */
+svg.icon { width: 18px; height: 18px; fill: currentColor; margin-right: 8px; vertical-align: middle; }
+svg.icon-large { width: 55px; height: 55px; fill: var(--primary); margin-bottom: 20px; transition: transform 0.3s ease; }
+
+/* Buttons */
+button { 
+    padding: 10px 18px; 
+    background-color: var(--bg-main); 
+    border: 1px solid var(--border-heavy); 
+    cursor: pointer; 
+    color: var(--text-main); 
+    font-family: var(--font-english); 
+    font-size: 13px; 
+    font-weight: 600; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    transition: all 0.2s ease; 
+    border-radius: 4px;
+}
+button:hover:not(:disabled) { 
+    background-color: var(--primary); 
+    color: var(--text-light); 
+    box-shadow: 0 4px 10px rgba(179, 0, 24, 0.2);
+}
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Inputs */
+input[type="text"], input[type="number"], select { 
+    width: 100%; padding: 10px; border: 1px solid var(--border-color); outline: none; 
+    font-family: var(--font-english); background: var(--bg-main); color: var(--text-main);
+    border-radius: 4px; transition: border-color 0.2s;
+}
+input[type="text"]:focus, input[type="number"]:focus, select:focus { border-color: var(--primary); }
+
+/* ==========================================================================
+   3. HEADER & NAVIGATION
+   ========================================================================== */
+.app-header { 
+    display: flex; align-items: center; justify-content: space-between; 
+    border-bottom: 2px solid var(--primary); background-color: var(--bg-main); 
+    padding: 0 20px; height: 70px; flex-shrink: 0; 
+    box-shadow: 0 2px 15px rgba(179, 0, 24, 0.08); z-index: 100;
+}
+
+.brand { 
+    font-size: 1.4rem; font-weight: bold; font-family: var(--font-english); 
+    text-transform: uppercase; display: flex; align-items: center; gap: 12px; 
+    text-decoration: none; color: var(--primary); 
+}
+.brand-logo { height: 50px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+
+.nav-links { display: flex; gap: 20px; font-family: var(--font-english); text-transform: uppercase; font-size: 0.85rem; font-weight: bold; }
+.nav-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; padding-bottom: 5px; }
+.nav-links a:hover, .nav-links a.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+
+/* ==========================================================================
+   4. PREMIUM MINIMALIST HOMEPAGE
+   ========================================================================== */
+.home-dashboard {
+    flex: 1; overflow-y: auto; padding: 60px 20px; background-color: #FAFAFA;
+    display: flex; flex-direction: column; align-items: center;
+}
+
+.hero-split {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; max-width: 1100px; gap: 40px; margin-bottom: 70px;
+}
+
+.hero-left { flex: 1; text-align: left; }
+.hero-left .hero-logo { height: 150px; margin-bottom: 25px; }
+.hero-left h1 {
+    font-family: var(--font-english); font-size: 3.5rem; color: var(--primary);
+    margin-bottom: 10px; text-transform: uppercase; letter-spacing: 4px; font-weight: 700;
+}
+
+.hero-right { flex: 1; display: flex; justify-content: flex-end; }
+
+.prayer-widget {
+    background: #ffffff; border: 1px solid #E5E5E5; border-top: 3px solid var(--primary);
+    padding: 30px 35px; width: 100%; max-width: 380px; text-align: left;
+}
+
+.widget-location {
+    font-family: var(--font-english); font-size: 0.75rem; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 6px;
+}
+.widget-location svg { width: 14px; height: 14px; fill: var(--primary); }
+
+.prayer-widget h3 { font-family: var(--font-english); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 5px; }
+.prayer-widget .next-prayer-name { font-family: var(--font-english); font-size: 2rem; font-weight: 700; color: var(--text-main); margin-bottom: 5px; text-transform: capitalize; }
+.prayer-widget .next-prayer-time { font-family: var(--font-english); font-size: 1.1rem; color: var(--primary); margin-bottom: 25px; font-weight: 600; }
+.prayer-widget .countdown-timer {
+    background: #FAFAFA; border: 1px solid #EAEAEA; padding: 12px; font-family: monospace;
+    font-size: 1.2rem; font-weight: bold; color: var(--text-main); text-align: center; letter-spacing: 2px;
+}
+
+.modules-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px; width: 100%; max-width: 1100px; margin-top: 50px;
+}
+
+.module-card {
+    background: #ffffff; border: 1px solid #EAEAEA; padding: 30px 25px;
+    text-decoration: none; color: var(--text-main); display: flex; flex-direction: column;
+    align-items: flex-start; transition: border-color 0.2s ease, background-color 0.2s ease;
+    border-radius: 0; box-shadow: none;
+}
+.module-card:hover { border-color: var(--primary); background-color: var(--primary-bg); }
+.module-icon { margin-bottom: 25px; }
+.module-icon svg { width: 24px; height: 24px; fill: var(--text-muted); transition: fill 0.2s ease; }
+.module-card:hover .module-icon svg { fill: var(--primary); }
+.module-card h2 { font-family: var(--font-english); font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; color: var(--text-main); }
+.module-card p { font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+
+/* ==========================================================================
+   5. APP LAYOUT & SIDEBAR (Shared)
+   ========================================================================== */
+.app-body { display: flex; flex: 1; overflow: hidden; position: relative; }
+
+#sidebar { width: 340px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; }
+.sidebar-header { padding: 15px; border-bottom: 1px solid var(--border-color); background: var(--bg-main); }
+.search-wrapper { position: relative; }
+.search-wrapper svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); fill: var(--text-muted); width: 16px; height: 16px; }
+.search-wrapper input[type="text"] { padding-left: 35px; }
+
+#sidebarList { flex: 1; overflow-y: auto; list-style: none; }
+#sidebarList li { padding: 12px 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-english); font-size: 14px; transition: all 0.1s; }
+#sidebarList li:hover { background-color: var(--hover-bg); color: var(--primary); }
+#sidebarList li.active { background-color: var(--active-bg); border-left: 4px solid var(--primary); font-weight: bold; color: var(--primary); }
+
+.item-info { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+.item-title { font-size: 0.9rem; text-transform: uppercase; display: flex; align-items: center; }
+.item-meta { font-size: 0.75rem; color: var(--text-muted); padding-left: 26px; }
+
+.back-layer-btn { background-color: var(--bg-toolbar); font-size: 0.85rem; padding: 12px 15px; border: none; border-bottom: 1px solid var(--border-heavy); cursor: pointer; text-align: left; font-weight: bold; display: flex; align-items: center; width: 100%; color: var(--primary); }
+.back-layer-btn:hover { background-color: var(--hover-bg); }
+
+/* ==========================================================================
+   6. TOOLBARS & DROPDOWNS (Shared)
+   ========================================================================== */
+#contentArea { flex: 1; display: flex; flex-direction: column; height: 100%; position: relative; }
+.toolbar { padding: 12px 20px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; background-color: var(--bg-toolbar); flex-wrap: wrap; gap: 15px; }
+.toolbar-group { display: flex; align-items: center; gap: 10px; position: relative; }
+
+.breadcrumb { font-family: var(--font-english); font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 350px; }
+.breadcrumb span.clickable { cursor: pointer; text-decoration: none; color: var(--primary); border-bottom: 1px dotted var(--primary); }
+.breadcrumb span.active { color: var(--text-main); font-weight: bold; }
+
+.settings-dropdown { position: relative; }
+.settings-menu { display: none; position: absolute; right: 0; top: 100%; margin-top: 5px; background-color: var(--bg-main); min-width: 250px; box-shadow: 0 8px 25px rgba(179, 0, 24, 0.15); border: 1px solid var(--border-heavy); z-index: 1000; padding: 20px; border-radius: 6px; }
+.settings-menu.show { display: block; }
+.settings-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-family: var(--font-english); font-size: 14px; }
+.switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 22px; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--primary); }
+input:checked + .slider:before { transform: translateX(18px); }
+
+/* ==========================================================================
+   7. QURAN VIEWER
+   ========================================================================== */
+.image-viewer { flex: 1; overflow: auto; display: flex; justify-content: center; align-items: flex-start; padding: 30px; background-color: #F5F0F1; }
+.image-container { box-shadow: 0 10px 30px rgba(179, 0, 24, 0.15); background: #fff; padding: 10px; border: 1px solid var(--border-color); max-width: 100%; border-radius: 4px; }
+#quranImage { max-width: 100%; height: auto; display: block; max-height: 80vh; object-fit: contain; }
+
+.listen-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; background-color: var(--bg-main); }
+.listen-title { font-size: 2.5rem; margin-bottom: 10px; font-family: var(--font-english); color: var(--primary); }
+.listen-subtitle { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; font-family: var(--font-english); }
+.audio-player-box { padding: 40px; border: 1px solid var(--border-heavy); background-color: var(--bg-toolbar); width: 100%; max-width: 600px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+#listenAudioPlayer { width: 100%; outline: none; margin-bottom: 25px; }
+.reciter-select { width: 100%; padding: 12px; font-family: var(--font-english); border: 1px solid var(--border-heavy); background-color: #fff; border-radius: 4px; }
+
+/* ==========================================================================
+   8. HADITH VIEWER
+   ========================================================================== */
+.hadith-viewer { flex: 1; overflow-y: auto; padding: 30px; background-color: var(--bg-main); scroll-behavior: smooth; }
+.hadith-container { max-width: 900px; margin: 0 auto; }
+
+.book-info-card { border: 2px solid var(--primary); padding: 30px; margin-bottom: 30px; background-color: var(--primary-bg); text-align: center; border-radius: 8px; box-shadow: 0 4px 15px rgba(179, 0, 24, 0.05); }
+.book-info-card h1 { font-family: var(--font-english); font-size: 2rem; margin-bottom: 10px; text-transform: uppercase; color: var(--primary); }
+.book-info-card h3 { font-family: var(--font-english); font-size: 1.1rem; color: var(--text-muted); margin-bottom: 5px; }
+.book-info-card .writer { font-family: var(--font-english); font-size: 1rem; font-weight: bold; margin-top: 15px; }
+
+.hadith-card { border: 1px solid var(--border-color); margin-bottom: 25px; background-color: var(--bg-main); border-radius: 6px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+.hadith-header { background-color: var(--bg-toolbar); padding: 15px; border-bottom: 1px solid var(--border-color); font-family: var(--font-english); display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; flex-wrap: wrap; gap: 10px; }
+.hadith-number { font-weight: bold; background: var(--primary); color: var(--text-light); padding: 3px 10px; border-radius: 20px; }
+.hadith-book-name { font-weight: bold; color: var(--primary); }
+.hadith-chapter { color: var(--text-muted); font-style: italic; }
+.hadith-grade { color: var(--primary-dark); font-weight: bold; background: var(--active-bg); padding: 2px 8px; border-radius: 20px; font-size: 0.75rem; text-transform: uppercase; }
+
+.hadith-body { padding: 30px; display: flex; flex-direction: column; gap: 20px; }
+.hadith-narrator { font-size: 0.95rem; font-weight: bold; color: var(--text-main); font-family: var(--font-english); background: var(--bg-toolbar); padding: 10px 15px; display: inline-block; border-left: 4px solid var(--primary); border-radius: 0 4px 4px 0; }
+.hadith-narrator .narr-urdu { font-family: var(--font-urdu); font-size: 1.1rem; direction: rtl; text-align: right; color: var(--primary); }
+
+.hadith-arabic { font-family: var(--font-arabic); font-size: var(--arabic-size); line-height: 2.2; text-align: right; direction: rtl; }
+.hadith-arabic.no-tashkeel { font-feature-settings: "tashkeel" 0; letter-spacing: 1px; }
+.hadith-english { font-family: var(--font-english); font-size: var(--eng-size); line-height: 1.6; color: #222; }
+.hadith-urdu { font-family: var(--font-urdu); font-size: var(--urdu-size); line-height: 2.5; text-align: right; direction: rtl; border-top: 1px dashed var(--border-color); padding-top: 20px; margin-top: 5px; }
+
+.pagination { display: flex; justify-content: center; align-items: center; gap: 15px; padding: 20px 0; border-top: 1px solid var(--border-color); font-family: var(--font-english); }
+.page-input { width: 60px; padding: 8px; text-align: center; border: 1px solid var(--border-heavy); border-radius: 4px; }
+
+/* ==========================================================================
+   9. 99 NAMES VIEWER
+   ========================================================================== */
+.names-viewer { flex: 1; overflow-y: auto; padding: 30px; background-color: var(--bg-main); }
+.names-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+
+.name-card { border: 1px solid var(--border-color); padding: 30px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; transition: all 0.3s; background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+.name-card:hover { border-color: var(--primary); background-color: var(--primary-bg); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(179, 0, 24, 0.1); }
+.name-arabic { font-family: var(--font-arabic); font-size: 2.5rem; color: var(--primary); }
+.name-translit { font-family: var(--font-english); font-size: 1.1rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+.name-meaning-eng { font-family: var(--font-english); font-size: 0.95rem; color: #333; }
+.name-meaning-urdu { font-family: var(--font-urdu); font-size: 1.4rem; color: var(--text-main); margin-top: 5px; }
+
+/* ==========================================================================
+   10. PRAYER TIMES
+   ========================================================================== */
+.pt-container { flex: 1; overflow-y: auto; padding: 30px; background-color: var(--bg-home); display: flex; flex-direction: column; align-items: center; }
+.pt-dashboard { width: 100%; max-width: 1000px; display: flex; flex-direction: column; gap: 20px; }
+
+.pt-search-bar { display: flex; gap: 15px; background: var(--bg-main); padding: 20px; border: 1px solid var(--border-heavy); flex-wrap: wrap; border-radius: 8px; box-shadow: 0 4px 15px rgba(179, 0, 24, 0.05); }
+.pt-search-bar .search-wrapper { flex: 1; min-width: 250px; }
+.pt-search-bar button { background-color: var(--primary); color: white; border-color: var(--primary); padding: 0 25px; }
+.pt-search-bar button:hover { background-color: var(--primary-dark); color: white; }
+
+.pt-header-card { background: var(--primary-bg); border: 2px solid var(--primary); padding: 40px 30px; text-align: center; position: relative; border-radius: 8px; box-shadow: 0 10px 30px rgba(179, 0, 24, 0.1); }
+.pt-header-card h1 { font-family: var(--font-english); color: var(--primary); font-size: 2.2rem; margin-bottom: 5px; text-transform: uppercase;}
+.pt-header-card .hijri-date { font-family: var(--font-arabic); font-size: 1.6rem; color: var(--text-main); margin-bottom: 5px; }
+.pt-header-card .greg-date { font-family: var(--font-english); color: var(--text-muted); font-size: 1rem; }
+
+.pt-countdown { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 15px 25px; border-radius: 30px; margin-top: 25px; display: inline-block; font-family: var(--font-english); font-size: 1.2rem; font-weight: bold; box-shadow: 0 6px 15px rgba(179, 0, 24, 0.3); }
+
+.pt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; }
+.pt-card { background: var(--bg-main); border: 1px solid var(--border-color); padding: 25px 15px; text-align: center; transition: all 0.3s; border-radius: 8px; }
+.pt-card:hover, .pt-card.active-prayer { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(179, 0, 24, 0.1); }
+.pt-card.active-prayer { border-width: 2px; border-bottom: 5px solid var(--primary); }
+.pt-card .name { font-family: var(--font-english); font-size: 1rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+.pt-card .time { font-family: var(--font-english); font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+.pt-card.active-prayer .name { color: var(--primary); font-weight: bold; }
+
+.pt-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.pt-panel { background: var(--bg-main); border: 1px solid var(--border-color); padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+.pt-panel h3 { font-family: var(--font-english); color: var(--primary); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+
+.qibla-info { display: flex; align-items: center; gap: 20px; }
+.qibla-compass { width: 90px; height: 90px; border: 3px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; box-shadow: inset 0 0 15px rgba(179, 0, 24, 0.1); }
+.qibla-compass .arrow { width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 45px solid var(--primary); transform-origin: 50% 100%; position: absolute; bottom: 50%; }
+.qibla-compass .north { position: absolute; top: 5px; font-size: 11px; font-family: var(--font-english); font-weight: bold; color: var(--text-muted); }
+.qibla-info-text h4 { font-family: var(--font-english); font-size: 1.8rem; color: var(--primary); }
+
+.pt-select { width: 100%; padding: 12px; border: 1px solid var(--border-heavy); font-family: var(--font-english); margin-top: 10px; border-radius: 4px; }
+
+.pt-calendar-wrapper { overflow-x: auto; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+.pt-calendar-table { width: 100%; border-collapse: collapse; font-family: var(--font-english); text-align: center; min-width: 600px; }
+.pt-calendar-table th, .pt-calendar-table td { padding: 12px; border: 1px solid var(--border-color); }
+.pt-calendar-table th { background-color: var(--bg-toolbar); color: var(--primary); font-weight: bold; text-transform: uppercase; font-size: 0.85rem; }
+.pt-calendar-table tr:hover { background-color: var(--hover-bg); }
+.pt-calendar-table td.today { background-color: var(--primary-bg); font-weight: bold; color: var(--primary); border-left: 3px solid var(--primary); }
+
+/* ==========================================================================
+   11. EMPTY STATES
+   ========================================================================== */
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); font-family: var(--font-english); text-align: center; }
+.empty-state svg { width: 150px; height: 150px; margin-bottom: 20px; fill: var(--border-color); }
+.empty-state h2 { color: var(--primary); margin-bottom: 10px; }
+
+/* ==========================================================================
+   12. RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 900px) {
+    .app-header { flex-direction: column; height: auto; padding: 15px 10px; gap: 15px; }
+    .brand-logo { height: 40px; }
+    .nav-links { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; }
+    .hero-split { flex-direction: column; align-items: flex-start; gap: 30px; margin-bottom: 40px; }
+    .hero-left h1 { font-size: 2.5rem; letter-spacing: 2px; }
+    .hero-right { justify-content: flex-start; width: 100%; }
+    .prayer-widget { max-width: 100%; }
+    .modules-grid { grid-template-columns: 1fr; padding-top: 20px; }
+    .app-body { flex-direction: column; }
+    #sidebar { width: 100%; height: 35vh; border-right: none; border-bottom: 1px solid var(--border-color); }
+    #contentArea { height: 65vh; }
+    .toolbar { flex-direction: column; align-items: stretch; text-align: center; }
+    .toolbar-group { justify-content: center; }
+    .breadcrumb { max-width: 100%; justify-content: center; }
+    .hadith-viewer { padding: 15px; }
+    .names-grid { grid-template-columns: 1fr; }
+    .pt-panels { grid-template-columns: 1fr; }
+    .pt-grid { grid-template-columns: repeat(2, 1fr); }
+    .pt-search-bar { flex-direction: column; }
+}
